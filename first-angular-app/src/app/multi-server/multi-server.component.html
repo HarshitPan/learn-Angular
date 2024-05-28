@@ -1,0 +1,22 @@
+<!-- <input class="form-control" type="text" [(ngModel)]="name">
+<input class="form-control" type="text" [(ngModel)]="name">
+<button class="btn btn-primary" [disabled]='!newServer' (click)="addServer()" >ADD SERVER</button>
+<button class="btn btn-primary" [disabled]='newServer===10' (click)="removeServer()" >REMOVE SERVER</button>
+
+<h1>Servers - {{newServer}} & {{name}}</h1>
+
+<h1 *ngIf="!newServer; else Server">No Server Available...</h1>
+<ng-template #Server> <h1>Server Available</h1> </ng-template>
+@if (name) {
+    <h3> Typing </h3>
+} -->
+<!-- {{newServer}} -->
+
+<app-server (newServerCreated)="addServer($event)"> </app-server>
+<!-- <p> </p> -->
+<app-disp-server 
+    *ngFor="let server of serversDetails"
+    [aliasElement]="server"
+>
+<p class="panel-body">This is {{server.name}} with ID as {{server.id}}</p>
+</app-disp-server>

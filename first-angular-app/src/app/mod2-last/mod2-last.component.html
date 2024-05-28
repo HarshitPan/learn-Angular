@@ -1,0 +1,9 @@
+<button (click)='changeDisp()'>Display Details</button>
+
+<p [ngStyle]='{display:disp}'>Content of my choice</p>
+
+<li *ngFor="let i of arr; let idx=index" [ngStyle]="{backgroundColor:((idx>=4)?'blue':'white'),color:((idx>=4)?'white':'black')}">{{i}}</li>
+
+<!-- @for(i of arr) {
+    <li>{{ i }}+"hello"</li>
+} -->

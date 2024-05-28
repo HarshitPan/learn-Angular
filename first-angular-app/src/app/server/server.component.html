@@ -1,0 +1,23 @@
+<!-- <h3 
+    [ngStyle]="{backgroundColor:getColor()[0],color:getColor()[1]}"
+    [ngClass]="{smallID: serverID<=50}" 
+>
+    This is {{serverName}} Component with ID {{serverID}}...
+</h3> -->
+
+<div class="row">
+    <div class="col-xs-5">
+        <label for="id" class="form-control"   >
+            Server ID
+        </label>
+        <input [(ngModel)]="serverID" type="number"  class="form-control" id="id" #serverIdTemplate>
+    </div>
+    <div class="col-xs-7">
+        <label for="name" class="form-control" >
+            Server Name
+        </label>
+        <input type="text" [(ngModel)]="serverName" class="form-control" id="name" #serverNameTemplate>
+        <hr>
+        <button type="button" (click)="onAdd(serverIdTemplate,serverNameTemplate)" class=" btn-success btn"> Submit</button>
+    </div>
+</div>

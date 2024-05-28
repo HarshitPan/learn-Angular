@@ -1,0 +1,436 @@
+set up angular - npm install -g @angular/cli
+create app - ng new <name> <flags> <--no-strict> <--routing false> <--standalone false>
+
+run server - ng serve
+
+RoadMap - 
+1) Getting Started 
+2) Basics - components, files connection, etc.
+3) Component and Data-Binding - 
+4) Directive
+5) Services and Dependency Injection 
+6) Routing 
+7) Observables
+8) Forms
+9) Pipes
+10) Http
+11) Authentication 
+12) Optimiztion and NgModules
+13) Deployement
+14) Animations and Testing
+15) Projects
+
+Language Used - TypeScript 
+
+CSS framework - Bootstrap
+
+set up bootstrap - 
+install - npm install --save bootstrap@3 
+config - angular.json -> style : add path to bootstap.min.css (currently)
+
+how angualar works - index.html -> bootstrap_<module> -> main.ts -> <App Modules> -> <app component.html, etc.> and so on 
+
+create root component - bootstrap: [<imported_component_defined_for_start> ]
+
+Components -
+  
+create custom component -> create .ts file, use @Component with selector: <custom_selector / tag_name> -> file html url in templateUrl and export the class
+
+- this ts file can be imported in other modules.
+
+**** generate a new component (CLI) -> ng generate component <name> or ng g c <name>
+
+nested components - components can be nested with one another i.e. initialize a component in one component and use that component in bootstraped component
+
+write html in js(jsx) - in template tag of @Component, '<...>' for single line `<...>` for multiline.
+
+Styling - StyleUrls in ts file @Component referring to css files or styles to write in-line css. * ONLY ONE...
+
+selectors (ways) :
+	[<name>] - attribute : <div <name> ></div>
+	.<name> - class : <div class=<name> > </div>
+	**** using ID , pseudo-selectors like hover, focus NOT USABLE.
+
+
+
+Data-Binding -:
+	input -> {{<data>  }} , [property]="data"
+	output -> (event) = action
+	2-way -> [(ngModel)]
+
+** we can insert any value or variable in .html using {{ }} which can be interpreted to string from same ts. so we can't use if else or for , etc.
+
+<p> this is {{<variable_name>}} </p>
+
+<button [disabled] = '<variable>' > button </button>
+
+string interpolation,
+<p [innerText]='<variable_name>'> 
+
+
+Binding events,
+
+onclick ->  (<event_name i.e. click>) = "<function/action_name>"
+
+*** we can pass any information of an event which occurent using $var i.e. (<event>) = "<function_name> ($event)";
+
+2-way binding, 
+
+<input ... [(ngModel)]="<varName>"> -> varName from anywhere will be change in input tag also.
+to get ngModel -> import {FormModules} from angular/forms and add it to imports in app.modules.ts;
+
+*** we can use conditional operation in html using {{...}} or <tag [property]="<condition>" >
+
+Directives -:
+Directives are instructions in the DOM
+
+<tag <directive> ... > </tag>
+
+*ngIf directive -> to set a block or not.
+
+NOTE - * indicates that ngIf changes DOM Structure
+
+*** Structured Directive,
+ngIf with else :
+<ng-template #<name> > ... </ng-template>
+< h1 *ngIf = "<condtion>; else <name>" > ... </h1>
+
+IN ANGULAR 17 and greater -> we can use,
+@if (condtion) {...}  
+
+*** Attributed Directives,
+directive used as attributes
+
+ngStyle -> use to dynamically change style property of a tag 
+
+<tag [ngStyle]=" <{ property: func()/value, ... }> "> </tag>
+
+ngClass -> add or remove certain css classes for a tag for a given condition..
+
+<tag [ngClass]=" { <className: condition> , ... } "> </tag>
+
+
+ngFor -> a directive (structured ) i.e. will be used as *ngFor, can be used as a attribute to a tag while passing some values...
+
+<tag(user-defined-selector/normal tags) *ngFor="let <var_name> of <array_name_to_pass> "> </tag> 
+
+similar to if there is @ decorator for ngFor directive,
+    @for (<var> of <array_name>; let <var> = <key(index)>) {
+      <li>{{ <var>.<member(title)> / <var> }}</li>
+    }
+
+
+****
+omitting data from one component to another ;
+
+Component Parent ->
+
+< tag *ngFor = " let <var> in <array>" [ <var_to_store / its alias>] = <var>  > </tag>
+
+i.e. we bind the data at the child component using parent component,
+
+to access this [child element],
+
+child component ->
+
+class {
+	...
+	@Input(<'alias'>) <var_to_store> : type ; // this is must as it assignes the <var_to_store> to be used outside the child class...
+
+}
+
+*** getting data from one component using a button or event,
+
+NOTE ** CREATING A EVENT,
+
+using EventEmitter,
+
+class ...{
+	...
+	<eventName> = new EventEmitter< <structure of event data to pass> >;
+
+	// emitting an event
+	function_name(){
+		this.<eventName>.emit(<data>);
+	}
+	...
+}
+
+
+similar to @Input, to make this event available to all other Classes, we use @output
+
+class ...{
+	@Output('alias') <eventName> = new EventEmitter< <data_structure> >;
+
+}
+
+
+**View Encapsulation, 
+
+for each component -> class are applied specified in their corresponding style files or style property of @Component decorator
+
+-> angular specify each tag in css with a corresponding code and that code is applied on to the tag in its respective component,
+
+i.e. p {...} in CSS will p __ngcontent_ejo_1 and for any other component it will be __ngcontent_ejo_2, etc.
+
+***Data Binding using HTML attribute
+
+<input #<naem> > 
+
+<button (click)='functionCall(<name>)';
+
+Data Binding using <ng-content> tag
+
+IN Parent Component -> <child-component> { <some html code> } </component>
+
+IN Child Component -> 
+
+... 
+<ng-content> </ng-content> // where we want to put the content of the parent...
+
+***there is also @ViewChild Decorator which can be used to transfer data (not commonly used),
+class X {
+	...
+	@ViewChild('<#reference to html element>') <property_defined> : <ElementRef>;
+
+	// ** NOW THIS PROPERTY IS BINDED TO AN HTML ELEMENT IN DOM MANIPULATING IT....
+	// ** <property_defined>.value = '' will change the value in DOM.
+}
+
+
+
+LifeCycle ->
+
+ngOnChanges -> ngOnInit -> ngDoCheck -> ngAfterContentInit -> ngAfterContentChecked -> ngAfterViewInit -> ngAfterViewChecked
+
+ngOnChanges-> called whenever bound input changes i.e. @Input Property 
+ngOnInit -> called once component is initialized
+ngDoCheck -> called when there is any change in the component.
+ngAfterContentInit -> called after ng-content is passed to the component 
+ngAfterContentChecked -> called whenever projected content (ng-content) is checked.
+ngAfterViewInit -> called after the component view has been initialized
+ngAfterViewChecked -> called after the view has been checked.
+ngOnDestroy -> called after a component is destroyed.
+
+** we can't access the value of any element before the calling of ngAfterViewInit
+
+@ContentChild -> we can refer to a child inside another component with <> of given component.
+i.e. 
+PARENT COMP.
+<child comp>
+	<tag #<reference> > </tag>
+</child comp>
+
+IN CHILD COMP...
+
+@ContentChild( ' <reference> ') <content_name> : ElementRef;
+NOTE *** THIS CAN BE ACCESSED AFTER ngOnContentInit is called...
+
+
+******** NOTE THAT THESE ALL DECORATION WE USED ARE AUTOMATICALLY USED BY THE ANGULAR AND WE DON'T HAVE TO MANUALLY CALL THEM.
+
+
+Creating our own directive attributes,
+
+@Directive {
+	selector : ' [ <attribute Name > ] '
+}
+class xyz {
+	constuctor(private element:ElementRef){
+
+	}
+
+	ngOnInit(){
+		//BETTER TO DO HERE AS IT WILL BE STYLED WHEN COMPONENT IS INITIALIZED...
+		this.element.nativeElement,style.backgroundColor = '<some_coloe' ;
+		...
+	}
+}
+
+we can import these attribute directive like we do for component...
+
+can be used in imported components,
+
+<tag <directive_name> ></tag>
+
+***ANOTHER APPROACH,
+
+Using Renderer2,
+
+@Directive ({
+	selector: '[<directive_name>]'
+})
+
+class xyz{
+	constructor(private ele:ElementRef,private render:Renderer2) {}
+
+	ngOnInit(){
+		this.render.setStyle(this.ele,nativeElement,'<property>' , 'Value' , <flags> i.e. (false / true, false / true) );
+	}
+}
+
+NOTE ->  Using Renderer2 can be beneficial if we are working on an application without any DOM. 
+
+*** IN PREVIOUS VERSIONS , Renderer2 was named as RendererV2;
+
+*** HostListener... it can be used to set some event which occur in a tag like hover, etc;
+
+...
+class xyz{
+	...
+	@HostListener('<eventName (mouseenter,etc) >') mouseover(data: <type>){
+		this.render.setStyle(this.ele.nativeElement, <property> , <value> , false, false);
+	}
+	...
+}
+
+
+*** HOST BINDING .... -> It can be used instead of Renderer2
+...
+@HostBinding('<property_name(style.backgroundColor)>') <var_name> = <value (transparent)> ;
+
+ngOnInit(){
+	this.<var_name> = 'black';
+}
+
+** we can use @input to get property dynamically set by user.
+** we can set an alias for an @Input value same as selector,
+ ex - [ngClass] = "<some_value>"
+ similarly, we can create our own directives with same properties.
+
+if we set the attribute of a tag in the directive then, we can directly use the variables of that directive in that tag,
+i.e. ... <property_binding> = <value>  ... 
+instead of ... [ <data_name> ] = "<value>" ... 
+NOTE -> ONLY APPLICABLE WHEN DOING IT WITH STRINGS.
+
+
+
+**** WHY * is needed in structual directives.
+
+* will change the syntax of the code ,
+
+for e.g. -> 
+
+...
+<div *ngIf="<condition>" >
+	...
+</div>
+...
+
+this will be converted to ,
+
+...
+<ng-template [ngIf]="<condition" >
+	<div>
+		...
+	</div>
+</ng-template>
+...
+
+-------------> set 
+
+for a property we can create a function which will execute everytime it changes....
+
+set <property_name> (<var>:<type>) {
+	//function defination
+}
+
+-------------->
+
+Building our own Structural Directive....
+
+...
+class xyz{
+	...
+	@Input set prop(val:type(boolean) ){
+		//execute the condition here...
+	
+		if(!val){
+			this.vcRef.createEmbeddedView(this.templateRef);
+		}
+		else this.vcRef.clear();
+	}
+	...
+
+	constructor(private templateRef : templateRef<any> , private vcRef: ViewContainerRef) {}
+}
+
+this can be used using,
+
+... <div *prop(<var_name>) = "<condition>" > ... </div> ...
+
+
+ngSwitch -> can be used to pair value to an exact value,
+
+<div [ngSwitch]="<var_name" >
+	<p *ngSwtichCase="<paritcular_val>"> ... </p>
+	<p *ngSwtichCase="<paritcular_val>"> ... </p>
+	<p *ngSwitchDefault> ... </p>
+
+</div>
+
+
+services -> context api to centralized a data and can be used again at any part
+
+how to create...
+create a normal class
+
+export class <class-name> {
+	...
+}
+
+** how to use...
+
+in component where we want to use it.
+
+@Component{
+	...
+	providers: [<class-name>]
+}
+export class <parent-class> {
+	...
+	constructor(private <service-var> : <class-name> ) {}
+	...
+}
+
+***hierarchical injector:
+app-module -> available everywhere.
+app-component -> available in that component and its all child component
+child-component -> 
+
+services are also overridden in lower level i.e. a new instance will be build for lower level
+
+***NOTE - we can inject a service in a service, ( that service should be provided in app-module )
+
+we have to use a decorator @Injectable{...} for that (In the servicing we are recieving another serivces.
+
+*** IT IS RECOMMENDED TO USE @INJECTABLE ON EACH SERVICES.
+
+*** CROSS COMPONENT COMMUNICATION USING SERVICES -:
+
+on the service, we can create a event emitter:
+newEvent = new EventEmitter<string>();
+
+we can emit this event from any component where service is available:
+this.service.newEvent.emit(string);
+
+the component which will listen to this event,
+
+constuctor(...) {
+	this.<service-name>.<newEvent>.subscribe(
+		(string) => {...} // callback function 
+	);
+}
+
+@Injectable({
+	providedIn: 'root'
+})
+
+
+*** array are assigned using refernce 
+i.e. newArr = arr;
+
+any changes in newArr will change values at arr.
+
+to provide a new array,
+newArray = arr.slice();
